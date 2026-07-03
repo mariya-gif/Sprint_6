@@ -1,4 +1,5 @@
 # pages/main_page.py
+import allure
 from selenium.webdriver.support.wait import WebDriverWait
 
 from pages.base_page import BasePage
@@ -40,9 +41,11 @@ class MainPage(BasePage):
         self._js_click(MainPageLocators.ORDER_BUTTON_BOTTOM)
 
     # --- Логотипы ---
+    @allure.step("Клик по лого самоката должен вернуть на главную страницу")
     def click_scooter_logo(self):
         self._js_click(MainPageLocators.SCOOTER_LOGO)
 
+    @allure.step("Клик по лого Яндекса должен открыть Дзен в новой вкладке через редирект")
     def click_yandex_logo_and_get_new_tab_url(self):
         original_handles = self.driver.window_handles
         self._js_click(MainPageLocators.YANDEX_LOGO)
