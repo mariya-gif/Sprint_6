@@ -33,7 +33,7 @@ ENTRY_POINTS = ["top", "bottom"]
 
 
 class TestOrder:
-    @allure.title("Оформление заказа: вход={entry_point}, набор данных №{data_index}")
+    @allure.title("Заказ: вход={entry_point}, данные №{data_index} — форма, успех, лого")
     @pytest.mark.parametrize("entry_point", ENTRY_POINTS)
     @pytest.mark.parametrize("data_index, order_data", list(enumerate(ORDER_DATA)))
     def test_full_order_flow(self, main_page, order_page, entry_point, data_index, order_data):
@@ -60,14 +60,9 @@ class TestOrder:
 
         assert order_page.is_order_success_shown(), "Модалка об успешном заказе не появилась"
 
-    @allure.title("Клик по лого самоката ведёт на главную")
-    def test_scooter_logo_redirects_to_main(self, main_page):
-        main_page.open_main()
-        main_page.click_scooter_logo()
-        assert main_page.driver.current_url == MAIN_URL, "После клика лого не вернуло на главную"
+        # Проверка логотипов — продолжение того же сценария после успешного заказа
+        redirected_url = main_page.click_yandex_logo_and_get_new_tab_url()
+        assert "dzen" in redirected_url, "Лого Яндекса не привело на Дзен"
 
-    @allure.title("Лого Яндекса ведёт на yandex.ru")
-    def test_yandex_logo_href_is_correct(self, main_page):
-        main_page.open_main()
-        href = main_page.get_yandex_logo_href()
-        assert "yandex.ru" in href, "Ссылка на лого Яндекса некорректна"
+        main_page.click_scooter_logo()
+        assert main_page.driver.current_url == MAIN_URL, "Лого самоката не вернуло на главную"

@@ -1,4 +1,6 @@
 # pages/main_page.py
+from selenium.webdriver.support.wait import WebDriverWait
+
 from pages.base_page import BasePage
 from locators.main_locators import MainPageLocators
 from url import MAIN_URL
@@ -39,10 +41,24 @@ class MainPage(BasePage):
 
     # --- Логотипы ---
     def click_scooter_logo(self):
-        self.click(MainPageLocators.SCOOTER_LOGO)
+        self._js_click(MainPageLocators.SCOOTER_LOGO)
 
-    def get_yandex_logo_href(self):
-        return self.driver.find_element(*MainPageLocators.YANDEX_LOGO).get_attribute("href")
+    def click_yandex_logo_and_get_new_tab_url(self):
+        original_handles = self.driver.window_handles
+        self._js_click(MainPageLocators.YANDEX_LOGO)
+
+        WebDriverWait(self.driver, 10).until(
+            lambda d: len(d.window_handles) > len(original_handles)
+        )
+        new_handle = [h for h in self.driver.window_handles if h not in original_handles][0]
+        self.driver.switch_to.window(new_handle)
+
+        WebDriverWait(self.driver, 10).until(lambda d: "dzen" in d.current_url)
+        redirected_url = self.driver.current_url
+
+        self.driver.close()
+        self.driver.switch_to.window(original_handles[0])
+        return redirected_url
 
     # --- Вспомогательное ---
     def _js_click(self, locator):
