@@ -4,7 +4,9 @@ class MainPageLocators:
     ORDER_BUTTON_TOP = (By.CSS_SELECTOR, ".Header_Nav__AGCXC button")
     ORDER_BUTTON_BOTTOM = (By.CSS_SELECTOR, ".Home_FinishButton__1_cWm button")
     ACCORDION_ITEMS = (By.CSS_SELECTOR, ".accordion__item")
-
+    SCOOTER_LOGO = (By.CSS_SELECTOR, ".Header_LogoScooter__3lsAR")
+    YANDEX_LOGO = (By.CSS_SELECTOR, ".Header_LogoYandex__3TSOI")
+   
     @staticmethod
     def accordion_heading(index):
         return (By.CSS_SELECTOR, f"#accordion__heading-{index}")
